@@ -1,9 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/newSlideshowItem"
+        android:alphabeticShortcut="n"
+        android:icon="@drawable/ic_menu_slideshow"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:title="@string/menuitem_new_slideshow"
+        android:titleCondensed="@string/menuitem_new_slideshow"/>
 
 </menu>

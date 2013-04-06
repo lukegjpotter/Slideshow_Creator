@@ -13,14 +13,27 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
         <activity
             android:name="com.github.lukegjpotter.app.slideshowcreator.SlideshowActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.github.lukegjpotter.app.slideshowcreator.SlideshowEditorActivity"
+            android:label="@string/title_activity_slideshow_editor"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        <activity
+            android:name="com.github.lukegjpotter.app.slideshowcreator.SlideshowPlayerActivity"
+            android:label="@string/title_activity_slideshow_player"
+            android:theme="@style/AppThemeNoTitleBar" >
         </activity>
     </application>
 
