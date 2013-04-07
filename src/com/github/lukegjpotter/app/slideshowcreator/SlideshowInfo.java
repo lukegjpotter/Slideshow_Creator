@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * <p>Date: 07/Apr/2013</p>
  * <p>Description:</p>
  * <p>
- * This class stores the inforrmation for a slideshow object.
+ * This class stores the information for a slideshow object.
  * Information stored is:
  *     * Name of the slideshow,
  *     * List of Images in the slideshow,
