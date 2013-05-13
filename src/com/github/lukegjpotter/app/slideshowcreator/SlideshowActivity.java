@@ -67,6 +67,65 @@ public class SlideshowActivity extends ListActivity {
 		return true;
 	}
 
+	// SlideshowEditor request code passed to startActivityForResult.
+	private static final int EDIT_ID = 0;
+	
+	/**
+	 * Handle choice from options menu.
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		// Get a reference to the LayoutInflator service.
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
+		// Inflate alert_dialog_set_slideshow_name.xml to create an EditText.
+		View view = inflater.inflate(R.layout.alert_dialog_set_slideshow_name, null);
+		final EditText nameEditText = (EditText) view.findViewById(R.id.nameEditText);
+		
+		// Create an input dialog to get the slideshow's name from the user.
+		AlertDialog.Builder inputBuilder = new AlertDialog.Builder(this);
+		inputBuilder.setView(view); // Set the dialog's custom view.
+		inputBuilder.setTitle(R.string.dialog_set_name_title);
+		
+		inputBuilder.setPositiveButton(R.string.button_set_slideshow_name, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+				// Create a SlideshowInfo object for the new slideshow.
+				String name = nameEditText.getText().toString().trim();
+				
+				if (name.length() != 0) {
+					
+					slideshowList.add(new SlideshowInfo(name));
+					
+					// Create Intent to launch the SlideshowEditor Activity,
+					// add slideshow name as an extra and start the Activity.
+					Intent editSlideshowIntent = new Intent(SlideshowActivity.this, SlideshowEditorActivity.class);
+					editSlideshowIntent.putExtra("NAME_EXTRA", name);
+					startActivityForResult(editSlideshowIntent, 0);
+				} else {
+					
+					// Display message that slideshow must have a name.
+					Toast message = Toast.makeText(SlideshowActivity.this, R.string.message_name, Toast.LENGTH_SHORT);
+					message.setGravity(Gravity.CENTER, message.getXOffset() / 2, message.getYOffset() / 2);
+					message.show();
+				}
+			}
+		});
+		
+		inputBuilder.setNegativeButton(R.string.button_cancel, null);
+		inputBuilder.show();
+		
+		return super.onOptionsItemSelected(item);
+	}
+
+
+
+
+
+
 	private class SideshowAdapter extends ArrayAdapter<SlideshowInfo> {
 		
 		private List<SlideshowInfo> items;
