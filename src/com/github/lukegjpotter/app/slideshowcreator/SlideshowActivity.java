@@ -317,4 +317,15 @@ public class SlideshowActivity extends ListActivity {
 		return null; // No matching object.
 	}
 
+	/**
+	 * Utility method to get a thumbnail image bitmap.
+	 */
+	public static Bitmap getThumbnail(Uri uri, ContentResolver cr, BitmapFactory.Options options) {
+		
+		int id = Integer.parseInt(uri.getLastPathSegment());
+		
+		Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MICRO_KIND, options);
+		
+		return bitmap;
+	}
 }
