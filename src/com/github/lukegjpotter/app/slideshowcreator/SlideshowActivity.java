@@ -131,6 +131,22 @@ public class SlideshowActivity extends ListActivity {
 		slideshowAdapter.notifyDataSetChanged(); // Refresh the Adapter.
 	}
 
+	/**
+	 * Class for implementing the "ViewHolder pattern"
+	 * for better ListView performance.
+	 */
+	private static class ViewHolder {
+		
+		TextView nameTextView; // Refers to ListView item's TextView.
+		ImageView imageView;   // Refers to ListView item's ImageView.
+		Button playButton;     // Refers to ListView item's Play Button.
+		Button editButton;     // Refers to ListView item's Edit Button.
+		Button deleteButton;   // Refers to ListView item's Delete Button.
+	}
+	
+	
+	
+	
 	private class SideshowAdapter extends ArrayAdapter<SlideshowInfo> {
 		
 		private List<SlideshowInfo> items;
