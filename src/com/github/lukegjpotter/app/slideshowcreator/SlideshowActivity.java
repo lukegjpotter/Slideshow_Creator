@@ -121,10 +121,15 @@ public class SlideshowActivity extends ListActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-
-
-
-
+	/**
+	 * Refresh ListView after slideshow editing in complete.
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		super.onActivityResult(requestCode, resultCode, data);
+		slideshowAdapter.notifyDataSetChanged(); // Refresh the Adapter.
+	}
 
 	private class SideshowAdapter extends ArrayAdapter<SlideshowInfo> {
 		
