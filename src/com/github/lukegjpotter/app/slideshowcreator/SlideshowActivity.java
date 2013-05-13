@@ -144,9 +144,10 @@ public class SlideshowActivity extends ListActivity {
 		Button deleteButton;   // Refers to ListView item's Delete Button.
 	}
 	
-	
-	
-	
+	/**
+	 * ArrayAdapter subclass that displays a slideshow's name,
+	 * first image and "Play", "Edit" and "Delete" Buttons. 
+	 */
 	private class SideshowAdapter extends ArrayAdapter<SlideshowInfo> {
 		
 		private List<SlideshowInfo> items;
@@ -155,6 +156,77 @@ public class SlideshowActivity extends ListActivity {
 		public SideshowAdapter(Context context, List<SlideshowInfo> items) {
 			
 			super(context, -1, items);
+			this.items = items;
+			inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		}
+		
+		/**
+		 * Returns the View to display at a given position.
+		 */
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			
+			ViewHolder viewHolder; // Holds a reference to current item's GUI.
+			
+			// If convertView is null, inflate GUI and create ViewHolder; otherwise, get existing ViewHolder.
+			if (convertView == null) {
+				
+				convertView = inflater.inflate(R.layout.view_slideshow_list_item, null);
+				
+				// Set up ViewHolder for this ListView item.
+				viewHolder = new ViewHolder();
+				viewHolder.nameTextView = (TextView) convertView.findViewById(R.id.nameTextView);
+				viewHolder.imageView = (ImageView) convertView.findViewById(R.id.slideshowImageView);
+				viewHolder.playButton = (Button) convertView.findViewById(R.id.playButton);
+				viewHolder.editButton = (Button) convertView.findViewById(R.id.editButton);
+				viewHolder.deleteButton = (Button) convertView.findViewById(R.id.deleteButton);
+				convertView.setTag(viewHolder); // Store as View's tag.
+			} else { // Get the ViewHolder from the convertView's tag.
+				
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+			
+			// Get the slideshow the display its name in nameTextView.
+			SlideshowInfo slideshowInfo = items.get(position);
+			viewHolder.nameTextView.setText(slideshowInfo.getName());
+			
+			// If there is at least one image in this slideshow.
+			if (slideshowInfo.size() > 0) {
+				
+				// Create a bitmap using the slideshow's first image or video.
+				String firstItem = slideshowInfo.getImageAt(0);
+				new LoadThumbnailTask().execute(viewHolder.imageView, Uri.parse(firstItem));
+			}
+			
+			// Set tag and OnClickListener for the "Play" button.
+			viewHolder.playButton.setTag(slideshowInfo);
+			viewHolder.playButton.setOnClickListener(playButtonListener);
+			
+			// Create and set OnClickListener for the "Edit" button.
+			viewHolder.editButton.setTag(slideshowInfo);
+			viewHolder.editButton.setOnClickListener(editButtonListener);
+			
+			// Create and set OnClickListener for the "Delete" button.
+			viewHolder.deleteButton.setTag(slideshowInfo);
+			viewHolder.deleteButton.setOnClickListener(deleteButtonListener);
+			
+			return convertView; // Return the View for this position.
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
