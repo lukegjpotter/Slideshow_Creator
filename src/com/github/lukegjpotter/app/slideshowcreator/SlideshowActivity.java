@@ -213,6 +213,33 @@ public class SlideshowActivity extends ListActivity {
 			return convertView; // Return the View for this position.
 		}
 	}
+
+	/**
+	 * Task to load thumbnails in a separate thread.
+	 */
+	private class LoadThumbnailTask extends AsyncTask<Object, Object, Bitmap> {
+		
+		ImageView imageView; // Displays the thumbnail.
+
+		// Load thumbnail: ImageView and Uri as args.
+		@Override
+		protected Bitmap doInBackground(Object... params) {
+			
+			imageView = (ImageView) params[0];
+			
+			return SlideshowActivity.getThumbnail((Uri) params[1], getContentResolver(), new BitmapFactory.Options());
+		}
+		
+		/**
+		 * Set thumbnail on ListView.
+		 */
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			
+			super.onPostExecute(result);
+			imageView.setImageBitmap(result);
+		}
+	}
 }
 
 
