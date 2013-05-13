@@ -299,4 +299,22 @@ public class SlideshowActivity extends ListActivity {
 			builder.show();
 		}
 	};
+
+	/**
+	 * Utility method to locate SlideshowInfo object by slideshow name.
+	 */
+	public static SlideshowInfo getSlideshowInfo(String name) {
+		
+		// Foreach SlideshowInfo.
+		for (SlideshowInfo slideshowInfo : slideshowList) {
+			
+			if (slideshowInfo.getName().equals(name)) {
+				
+				return slideshowInfo; // Matching object.
+			}
+		}
+		
+		return null; // No matching object.
+	}
+
 }
