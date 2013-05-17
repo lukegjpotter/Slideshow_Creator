@@ -167,6 +167,22 @@ public class SlideshowEditorActivity extends ListActivity {
     };
 
     /**
+     * Called when the user touches the "Delete" button next to an ImageView.
+     */
+    private OnClickListener deleteButtonListener = new OnClickListener() {
+
+        /**
+         * Removes the image.
+         * @param view
+         */
+        @Override
+        public void onClick(View view) {
+
+            slideshowEditorAdapter.remove((String) view.getTag());
+        }
+    };
+
+    /**
      * The creation of the Options menu
      *
      * @param menu
