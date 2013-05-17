@@ -30,6 +30,27 @@ public class SlideshowEditorActivity extends ListActivity {
 
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_slideshow_editor);
+
+        // Retrieve the slideshow.
+        String name = getIntent().getStringExtra(SlideshowActivity.NAME_EXTRA);
+        slideshow = SlideshowActivity.getSlideshowInfo(name);
+
+        // Set appropriate OnClickListeners for each Button.
+        Button doneButton = (Button) findViewById(R.id.doneButton);
+        doneButton.setOnClickListener(doneButtonListener);
+
+        Button addPictureButton = (Button) findViewById(R.id.addPictureButton);
+        doneButton.setOnClickListener(addPictureButtonListener);
+
+        Button addMusicButton = (Button) findViewById(R.id.addMusicButton);
+        doneButton.setOnClickListener(addMusicButtonListener);
+
+        Button playButton = (Button) findViewById(R.id.playButton);
+        doneButton.setOnClickListener(playButtonListener);
+
+        // Get ListView and set it's adapter for displaying list of images.
+        slideshowEditorAdapter = new SlideshowEditorAdapter(this, slideshow.getImageList());
+        getListView().setAdapter(slideshowEditorAdapter);
 	}
 
 	@Override
