@@ -108,6 +108,24 @@ public class SlideshowEditorActivity extends ListActivity {
     };
 
     /**
+     * Called when the user touches the "Add Picture" Button.
+     */
+    private OnClickListener addPictureButtonListener = new OnClickListener() {
+
+        /**
+         * Launch image choosing activity.
+         * @param view
+         */
+        @Override
+        public void onClick(View view) {
+
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(Intent.createChooser(intent, getResources().getText(R.string.chooser_image)), PICTURE_ID);
+        }
+    };
+
+    /**
      * The creation of the Options menu
      *
      * @param menu
