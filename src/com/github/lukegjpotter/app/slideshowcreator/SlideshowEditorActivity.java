@@ -92,6 +92,22 @@ public class SlideshowEditorActivity extends ListActivity {
     }
 
     /**
+     * Called when the user touches the "Done" button.
+     */
+    private OnClickListener doneButtonListener = new OnClickListener() {
+
+        /**
+         * Return to the previous activity.
+         * @param view
+         */
+        @Override
+        public void onClick(View view) {
+
+            finish();
+        }
+    };
+
+    /**
      * The creation of the Options menu
      *
      * @param menu
