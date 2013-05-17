@@ -144,6 +144,29 @@ public class SlideshowEditorActivity extends ListActivity {
     };
 
     /**
+     * Called when the user touches the "Play" Button.
+     */
+    private OnClickListener playButtonListener = new OnClickListener() {
+
+        /**
+         * Plays the current slideshow.
+         * @param view
+         */
+        @Override
+        public void onClick(View view) {
+
+            // Create new Intent to launch the SlideshowPlayerActivity activity.
+            Intent playSlideshow = new Intent(SlideshowEditorActivity.this, SlideshowPlayerActivity.class);
+
+            // Include the slideshow's name as an extra.
+            playSlideshow.putExtra(SlideshowActivity.NAME_EXTRA, slideshow.getName());
+
+            // Launch the Activity.
+            startActivity(playSlideshow);
+        }
+    };
+
+    /**
      * The creation of the Options menu
      *
      * @param menu
