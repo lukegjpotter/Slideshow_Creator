@@ -21,9 +21,14 @@ import android.widget.ImageView;
 
 public class SlideshowEditorActivity extends ListActivity {
 
+    // SlideshowEditorAdapter to display slideshow in ListView.
+    private SlideshowEditorAdapter slideshowEditorAdapter;
+    private SlideshowInfo slideshow; // Contains Slideshow Data.
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+
+        super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_slideshow_editor);
 	}
 
@@ -34,4 +39,17 @@ public class SlideshowEditorActivity extends ListActivity {
 		return true;
 	}
 
+    private class SlideshowEditorAdapter extends ArrayAdapter <String> {
+
+        private List <String> items; // List of image URIs.
+        private LayoutInflater inflater;
+
+        public SlideshowEditorAdapter(Context context, List <String> items) {
+
+            super(context, -1, items);
+
+            this.items = items;
+            inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+    }
 }
