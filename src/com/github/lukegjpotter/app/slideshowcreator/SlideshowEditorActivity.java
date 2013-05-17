@@ -126,6 +126,24 @@ public class SlideshowEditorActivity extends ListActivity {
     };
 
     /**
+     * Called when the user touches the "Add Music" Button.
+     */
+    private OnClickListener addMusicButtonListener = new OnClickListener() {
+
+        /**
+         * Launch music choosing activity.
+         * @param view
+         */
+        @Override
+        public void onClick(View view) {
+
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("audio/*");
+            startActivityForResult(Intent.createChooser(intent, getResources().getText(R.string.chooser_music)), MUSIC_ID);
+        }
+    };
+
+    /**
      * The creation of the Options menu
      *
      * @param menu
