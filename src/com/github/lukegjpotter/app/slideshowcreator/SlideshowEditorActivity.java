@@ -25,6 +25,15 @@ public class SlideshowEditorActivity extends ListActivity {
     private SlideshowEditorAdapter slideshowEditorAdapter;
     private SlideshowInfo slideshow; // Contains Slideshow Data.
 
+    // Set IDs for each type of media result.
+    private static final int PICTURE_ID = 1;
+    private static final int MUSIC_ID = 2;
+
+    /**
+     * The onCreate method.
+     *
+     * @param savedInstanceState
+     */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -53,6 +62,41 @@ public class SlideshowEditorActivity extends ListActivity {
         getListView().setAdapter(slideshowEditorAdapter);
 	}
 
+    /**
+     * This method is called when an Activity, launched from this Activity, returns.
+     *
+     * @param requestCode
+     * @param responseCode
+     * @param intent
+     */
+    @Override
+    protected void startActivityForResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == RESULT_OK) { // If there was no error.
+
+            Uri selectedUri = data.getData();
+
+            // If the Activity returns an image.
+            if (requestCode == PICTURE_ID) {
+
+                // Add new image path to the slideshow.
+                slideshow.addImage(selectedUri.toString());
+
+                // Refresh the ListView.
+                slideshowEditorAdapter.notifyDataSetChanged();
+            } else if (requestCode == MUSIC_ID) { // Activity returns music.
+
+                slideshow.setMusicPath(selectedUri.toString());
+            }
+        }
+    }
+
+    /**
+     * The creation of the Options menu
+     *
+     * @param menu
+     * @return true
+     */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -60,6 +104,9 @@ public class SlideshowEditorActivity extends ListActivity {
 		return true;
 	}
 
+    /**
+     *
+     */
     private class SlideshowEditorAdapter extends ArrayAdapter <String> {
 
         private List <String> items; // List of image URIs.
