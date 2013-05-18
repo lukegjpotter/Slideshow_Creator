@@ -1,10 +1,22 @@
 package com.github.lukegjpotter.app.slideshowcreator;
 
+/**
+ * SlideshowEditorActivity.java
+ *
+ * @author Luke GJ Potter - lukegjpotter
+ * Date: 15/May/2013
+ *
+ * @version 1.0
+ *
+ * Description:
+ *     This Activity is used for building and
+ *     editing a slideshow.
+ */
+
 import java.util.List;
 
 import android.os.Bundle;
 import android.app.ListActivity;
-import android.view.Menu;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;

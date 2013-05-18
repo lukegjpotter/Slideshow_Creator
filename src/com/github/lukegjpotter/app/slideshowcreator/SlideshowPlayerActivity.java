@@ -1,5 +1,18 @@
 package com.github.lukegjpotter.app.slideshowcreator;
 
+/**
+ * SlideshowPlayerActivity.java
+ *
+ * @author Luke GJ Potter - lukegjpotter
+ * Date: 18/May/2013
+ *
+ * @version 1.0
+ *
+ * Descrtiption:
+ *     This activity plays the selected slideshow
+ *     that's passed as an Intent extra.
+ */
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
