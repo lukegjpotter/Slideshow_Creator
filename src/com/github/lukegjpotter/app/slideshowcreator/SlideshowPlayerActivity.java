@@ -13,9 +13,23 @@ package com.github.lukegjpotter.app.slideshowcreator;
  *     that's passed as an Intent extra.
  */
 
-import android.os.Bundle;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import android.app.Activity;
-import android.view.Menu;
+import android.content.ContentResolver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.widget.ImageView;
 
 public class SlideshowPlayerActivity extends Activity {
 
@@ -24,12 +38,4 @@ public class SlideshowPlayerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_slideshow_player);
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.slideshow_player, menu);
-		return true;
-	}
-
 }
