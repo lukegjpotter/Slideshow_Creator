@@ -70,7 +70,7 @@ public class SlideshowEditorActivity extends ListActivity {
      * @param data
      */
     @Override
-    protected void startActivityForResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == RESULT_OK) { // If there was no error.
 
