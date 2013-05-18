@@ -183,19 +183,6 @@ public class SlideshowEditorActivity extends ListActivity {
     };
 
     /**
-     * The creation of the Options menu
-     *
-     * @param menu
-     * @return true
-     */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.slideshow_editor, menu);
-		return true;
-	}
-
-    /**
      * Class for implementing the "ViewHolder pattern" for better ListView performance.
      */
     private static class ViewHolder {
