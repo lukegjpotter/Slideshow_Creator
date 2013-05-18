@@ -161,6 +161,24 @@ public class SlideshowPlayerActivity extends Activity {
     }
 
     /**
+     * Save slideshow state so ti can be restored in onCreate().
+     *
+     * @param outState
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        super.onSaveInstanceState(outState);
+
+        // If there is a mediaPlayer, store media's current position.
+        if (mediaPlayer != null) outState.putInt(MEDIA_TIME, mediaPlayer.getCurrentPosition());
+
+        // Save nextItemIndex and slideshowName.
+        outState.putInt(IMAGE_INDEX, nextItemIndex - 1);
+        outState.putString(SLIDESHOW_NAME, slideshowName);
+    }
+
+    /**
      * Anonymous inner class that implements Runnable to control the slideshow.
      */
     private Runnable updateSlideshow = new Runnable() {
