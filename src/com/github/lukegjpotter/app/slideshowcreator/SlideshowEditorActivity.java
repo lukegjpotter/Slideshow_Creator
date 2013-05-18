@@ -66,8 +66,8 @@ public class SlideshowEditorActivity extends ListActivity {
      * This method is called when an Activity, launched from this Activity, returns.
      *
      * @param requestCode
-     * @param responseCode
-     * @param intent
+     * @param resultCode
+     * @param data
      */
     @Override
     protected void startActivityForResult(int requestCode, int resultCode, Intent data) {
@@ -196,7 +196,16 @@ public class SlideshowEditorActivity extends ListActivity {
 	}
 
     /**
-     *
+     * Class for implementing the "ViewHolder pattern" for better ListView performance.
+     */
+    private static class ViewHolder {
+
+        ImageView slideImageView; // Refers to ListView item's ImageView.
+        Button deleteButton;      // Refers to ListView item's Button.
+    }
+
+    /**
+     * ArrayAdapter displaying Slideshow images.
      */
     private class SlideshowEditorAdapter extends ArrayAdapter <String> {
 
@@ -210,5 +219,67 @@ public class SlideshowEditorActivity extends ListActivity {
             this.items = items;
             inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
-    }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder viewHolder; // Holds a reference to current item's GUI.
+
+            /*
+             * If convertView is null, inflate GUI and create ViewHolder;
+             * Otherwise, get existing ViewHolder.
+             */
+            if (convertView == null) {
+
+                convertView = inflater.inflate(R.layout.view_slideshow_editor_edit_item, null);
+
+                // Setup ViewHolder for this ListView item.
+                viewHolder = new ViewHolder();
+                viewHolder.slideImageView = (ImageView) convertView.findViewById(R.id.slideshowImageView);
+                viewHolder.deleteButton = (Button) convertView.findViewById(R.id.deleteButton);
+                convertView.setTag(viewHolder);
+            } else {
+
+                // Get the ViewHolder from the convertView's tag.
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            // Get and display a thumbnail Bitmap image.
+            String item = items.get(position); // Get the current image.
+            new LoadThumbnailTask().execute(viewHolder.slideImageView, Uri.parse(item));
+
+            // Configure the "Delete" Button.
+            viewHolder.deleteButton.setTag(item);
+            viewHolder.deleteButton.setOnClickListener(deleteButtonListener);
+
+            return convertView;
+        }
+    } // End class SlideshowEditorAdapter
+
+    /**
+     * Task to load thumbnails in a separate thread.
+     */
+    private class LoadThumbnailTask extends AsyncTask<Object, Object, Bitmap> {
+
+        ImageView imageView; // Displays the thumbnail.
+
+        // Load thumbnail: ImageView, MediaType and Uri as args.
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+
+            imageView = (ImageView) params[0];
+
+            return SlideshowActivity.getThumbnail((Uri) params[1], getContentResolver(), new BitmapFactory.Options());
+        }
+
+        /**
+         * Set thumbnail on ListView.
+         */
+        @Override
+        protected void onPostExecute(Bitmap result) {
+
+            super.onPostExecute(result);
+            imageView.setImageBitmap(result);
+        }
+    } // End class LoadThumbnailTask
 }
