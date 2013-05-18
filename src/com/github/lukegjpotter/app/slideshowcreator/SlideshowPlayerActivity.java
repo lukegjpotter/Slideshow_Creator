@@ -8,12 +8,13 @@ package com.github.lukegjpotter.app.slideshowcreator;
  *
  * @version 1.0
  *
- * Descrtiption:
+ * Description:
  *     This activity plays the selected slideshow
  *     that's passed as an Intent extra.
  */
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import android.app.Activity;
@@ -29,16 +30,21 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.Window;
 import android.widget.ImageView;
 
 public class SlideshowPlayerActivity extends Activity {
 
+    // Used for logging.
     private static final String TAG = "SLIDESHOW";
 
+    // Used for resuming the slideshow's position.
     private static final String MEDIA_TIME = "MEDIA_TIME";
     private static final String IMAGE_INDEX = "IMAGE_INDEX";
     private static final String SLIDESHOW_NAME = "SLIDESHOW_NAME";
 
+    // Class level variables.
     private static final int DURATION = 5000; // Five seconds per slide.
     private ImageView imageView;              // Displays the name of the current image.
     private String slideshowName;             // Name of the current slideshow.
@@ -191,6 +197,103 @@ public class SlideshowPlayerActivity extends Activity {
         @Override
         public void run() {
 
+            if (nextItemIndex >= slideshow.size()) {
+
+                // If there is music playing.
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+
+                    mediaPlayer.reset();
+                }
+
+                // Return to the launching Activity.
+                finish();
+            } else {
+
+                String item = slideshow.getImageAt(nextItemIndex);
+                new LoadImageTask().execute(Uri.parse(item));
+                ++nextItemIndex;
+            }
+        }
+
+        /**
+         * Task to load thumbnails in a separate thread.
+         */
+        class LoadImageTask extends AsyncTask <Uri, Object, Bitmap> {
+
+            /**
+             * Load Images
+             *
+             * @param uris
+             * @return bitmap
+             */
+            @Override
+            protected Bitmap doInBackground(Uri... uris) {
+
+                return getBitmap(uris[0], getContentResolver(), options);
+            }
+
+            /**
+             * Set thumbnail on ListView.
+             *
+             * @param bitmap
+             */
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+
+                super.onPostExecute(bitmap);
+
+                BitmapDrawable next = new BitmapDrawable(bitmap);
+                next.setGravity(Gravity.CENTER);
+                Drawable previous = imageView.getDrawable();
+
+                // If previous is a TransitionDrawable, get its second Drawable item.
+                if (previous instanceof TransitionDrawable) {
+
+                    previous = ((TransitionDrawable) previous).getDrawable(1);
+                }
+
+                if (previous == null) {
+
+                    imageView.setImageDrawable(next);
+                } else {
+
+                    Drawable[] drawables = {previous, next};
+                    TransitionDrawable transition = new TransitionDrawable(drawables);
+                    imageView.setImageDrawable(transition);
+                    transition.startTransition(1000);
+                }
+
+                handler.postDelayed(updateSlideshow, DURATION);
+            }
+
+            /**
+             * Utility method to get a Bitmap from a Uri.
+             *
+             * @param uri
+             * @param cr
+             * @param options
+             * @return bitmap
+             */
+            public Bitmap getBitmap(Uri uri, ContentResolver cr, BitmapFactory.Options options) {
+
+                Bitmap bitmap = null;
+
+                // Get the image.
+                try {
+
+                    InputStream input = cr.openInputStream(uri);
+                    bitmap = BitmapFactory.decodeStream(input, null, options);
+                    input.close();
+                } catch (FileNotFoundException e) {
+
+                    Log.v(TAG, e.toString());
+                } catch (IOException e) {
+
+                    Log.v(TAG, e.toString());
+                }
+
+                return bitmap;
+            }
         }
     };
 }
