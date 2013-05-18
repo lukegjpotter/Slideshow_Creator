@@ -102,4 +102,77 @@ public class SlideshowPlayerActivity extends Activity {
         // Control the slideshow via the handler.
         handler = new Handler();
 	}
+
+    /**
+     * Called after onCreate() and somethimes onStop().
+     */
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+        // Post updateSlideshow to execute.
+        handler.post(updateSlideshow);
+    }
+
+    /**
+     * Called when the Activity is paused.
+     */
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+
+        if (mediaPlayer != null) mediaPlayer.pause();
+    }
+
+    /**
+     * Called after onStart() or onPause().
+     */
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+
+        if (mediaPlayer != null) mediaPlayer.start();
+    }
+
+    /**
+     * Called when the Activity stops.
+     */
+    @Override
+    protected void onStop() {
+
+        super.onStop();
+
+        // Prevent slideshow from operating when in background.
+        handler.removeCallbacks(updateSlideshow);
+    }
+
+    /**
+     * Called when the Activity is destroyed.
+     */
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+
+        // Release the MediaPlayer resources.
+        if (mediaPlayer != null) mediaPlayer.release();
+    }
+
+    /**
+     * Anonymous inner class that implements Runnable to control the slideshow.
+     */
+    private Runnable updateSlideshow = new Runnable() {
+
+        /**
+         * Run method.
+         *
+         * This gets called automatically.
+         */
+        @Override
+        public void run() {
+
+        }
+    };
 }
