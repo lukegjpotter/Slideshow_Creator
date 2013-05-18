@@ -33,6 +33,8 @@ import android.widget.ImageView;
 
 public class SlideshowPlayerActivity extends Activity {
 
+    private static final String TAG = "SLIDESHOW";
+
     private static final String MEDIA_TIME = "MEDIA_TIME";
     private static final String IMAGE_INDEX = "IMAGE_INDEX";
     private static final String SLIDESHOW_NAME = "SLIDESHOW_NAME";
@@ -53,7 +55,51 @@ public class SlideshowPlayerActivity extends Activity {
      */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+
+        super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_slideshow_player);
+
+        imageView = (ImageView) findViewById(R.id.imageView);
+
+        if (savedInstanceState == null) {
+
+            // Get slideshow name from Intent's extras.
+            slideshowName = getIntent().getStringExtra(SlideshowActivity.NAME_EXTRA);
+            mediaTime = 0;     // Position in media clip.
+            nextItemIndex = 0; // Start from first image.
+        } else { // Activity Resuming.
+
+            // Get the parameters that were saved when config changed.
+            slideshowName = savedInstanceState.getString(SLIDESHOW_NAME);
+            mediaTime = savedInstanceState.getInt(MEDIA_TIME);
+            nextItemIndex = savedInstanceState.getInt(IMAGE_INDEX);
+        }
+
+        // Get SlideshowInfo for slideshow to play.
+        slideshow = SlideshowActivity.getSlideshowInfo(slideshowName);
+
+        // Configure BitmapFactory.Options for loading images.
+        options = new BitmapFactory.Options();
+        options.inSampleSize = 4; // Sample at 1/4 original width/height.
+
+        // If there is music to play.
+        if (slideshow.getMusicPath() != null) {
+
+            // Try to create the MediaPlayer to play the music.
+            try {
+
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setDataSource(this, Uri.parse(slideshow.getMusicPath()));
+                mediaPlayer.prepare();         // Prepare the MediaPlayer to play.
+                mediaPlayer.setLooping(true);  // Loop the music.
+                mediaPlayer.seekTo(mediaTime); // Seek to mediaTime.
+            } catch (Exception e) {
+
+                Log.v(TAG, e.toString());
+            }
+        }
+
+        // Control the slideshow via the handler.
+        handler = new Handler();
 	}
 }
