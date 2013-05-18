@@ -33,6 +33,24 @@ import android.widget.ImageView;
 
 public class SlideshowPlayerActivity extends Activity {
 
+    private static final String MEDIA_TIME = "MEDIA_TIME";
+    private static final String IMAGE_INDEX = "IMAGE_INDEX";
+    private static final String SLIDESHOW_NAME = "SLIDESHOW_NAME";
+
+    private static final int DURATION = 5000; // Five seconds per slide.
+    private ImageView imageView;              // Displays the name of the current image.
+    private String slideshowName;             // Name of the current slideshow.
+    private SlideshowInfo slideshow;          // Slideshow being played.
+    private BitmapFactory.Options options;    // Options for loading images.
+    private Handler handler;                  // Used to update the slideshow.
+    private int nextItemIndex;                // Index of the next image to display.
+    private int mediaTime;                    // Time in milliseconds from which media should play.
+    private MediaPlayer mediaPlayer;          // Plays the background music, if any.
+
+    /**
+     * Initializes the SlideshowPlayerActivity
+     * @param savedInstanceState
+     */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
