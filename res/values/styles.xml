@@ -19,5 +19,6 @@
     
     <!-- Application theme, without the title bar -->
     <style name="AppThemeNoTitleBar" parent="android:Theme.Holo.Light.NoActionBar"></style>
+    <style name="AppThemeNoTitleBarFullscreen" parent="android:style/Theme.NoTitleBar.Fullscreen"></style>
 
 </resources>

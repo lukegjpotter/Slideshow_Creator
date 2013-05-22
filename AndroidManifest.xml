@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.lukegjpotter.app.slideshowcreator"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="2"
+    android:versionName="2.0" >
+
+    <!-- Permissions for Saving files to the SD card and using the camera -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE">
+    </uses-permission>
+    <uses-permission
+        android:name="android.permission.CAMERA">
+    </uses-permission>
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -35,6 +43,13 @@
             android:label="@string/title_activity_slideshow_player"
             android:theme="@style/AppThemeNoTitleBar" >
         </activity>
+
+        <activity
+            android:name="com.github.lukegjpotter.app.slideshowcreator.PictureTakerActivity"
+            android:label="@string/title_activity_picture_taker"
+            android:theme="@style/AppThemeNoTitleBarFullscreen" >
+        </activity>
+
     </application>
 
 </manifest>
