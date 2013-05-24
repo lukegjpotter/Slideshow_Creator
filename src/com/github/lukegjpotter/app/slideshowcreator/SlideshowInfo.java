@@ -1,5 +1,6 @@
 package com.github.lukegjpotter.app.slideshowcreator;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -14,44 +15,47 @@ import java.util.ArrayList;
  * This class stores the information for a slideshow object.
  * Information stored is:
  *     * Name of the slideshow,
- *     * List of Images in the slideshow,
+ *     * List of MediaItems in the slideshow,
  *     * Path to the music file that the slideshow uses.
  * </p>
  */
-public class SlideshowInfo {
+public class SlideshowInfo implements Serializable {
+
+    // Class's version number.
+    private static final long serialVersionUID = 1L;
 
 	private String name;
-	private List<String> imageList;
+	private List<MediaItem> mediaItemsList;
 	private String musicPath;
 
 	public SlideshowInfo(String slideshowName) {
 
 		name = slideshowName;
-		imageList = new ArrayList<String>();
-		setMusicPath(null);
+        mediaItemsList = new ArrayList<MediaItem>();
+		setMusicPath(null); // Currently there isn't any music in the slideshow.
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public List<String> getImageList() {
-		return imageList;
+	public List<MediaItem> getMediaItemsList() {
+		return mediaItemsList;
 	}
 
-	public void addImage(String path) {
-		imageList.add(path);
+	public void addMediaItem(MediaItem.MediaType type, String path) {
+        mediaItemsList.add(new MediaItem(type, path));
 	}
 
-	public String getImageAt(int index) {
+	public MediaItem getMediaItemAt(int index) {
 		if (index >= 0 && index < size())
-			return imageList.get(index);
+			return mediaItemsList.get(index);
 		else
 			return null;
 	}
 
 	public int size() {
-		return imageList.size();
+		return mediaItemsList.size();
 	}
 
 	public String getMusicPath() {
