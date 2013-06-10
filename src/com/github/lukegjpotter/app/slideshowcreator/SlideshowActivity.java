@@ -12,9 +12,7 @@ package com.github.lukegjpotter.app.slideshowcreator;
  *     This is the main activity for the Slideshow.
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +47,9 @@ import android.widget.Toast;
 
 public class SlideshowActivity extends ListActivity {
 
+    private static final String TAG = "SLIDESHOW"; // Error logging tag.
+
+    // Used when adding slideshow name as an extra to an Intent.
 	public static final String NAME_EXTRA = "NAME";
 	
 	static List<SlideshowInfo> slideshowList; // List of slideshows.
@@ -309,6 +310,48 @@ public class SlideshowActivity extends ListActivity {
             // Create and set the ListView's adapter.
             slideshowAdapter = new SlideshowAdapter(SlideshowActivity.this, slideshowList);
             slideshowListView.setAdapter(slideshowAdapter);
+        }
+    }
+
+    /**
+     * Class to save the List<SlideshowInfo> onject to the device's filesystem.
+     */
+    private class SaveSlideshowTask extends AsyncTask<Object, Object, Object> {
+
+        // Save from non-GUI thread.
+        @Override
+        protected Object doInBackground(Object... objects) {
+
+            try {
+
+                // If the file doesn't exsit, create it.
+                if (!slideshowFile.exists()) {
+                    slideshowFile.createNewFile();
+                }
+
+                // Create ObjectOutputStream, then write slideshowList to it.
+                ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(slideshowFile));
+                output.writeObject(slideshowList);
+                output.close();
+
+            } catch (final Exception e) {
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        // Display error message.
+                        Toast message = Toast.makeText(SlideshowActivity.this, R.string.message_error_writing, Toast.LENGTH_LONG);
+                        message.setGravity(Gravity.CENTER, message.getXOffset() / 2, message.getYOffset() / 2);
+                        message.show();
+
+                        Log.v(TAG, e.toString());
+                    }
+                });
+
+            }
+
+            return (Object) null;
         }
     }
 
