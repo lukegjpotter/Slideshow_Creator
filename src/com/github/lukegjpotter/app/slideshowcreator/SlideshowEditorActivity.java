@@ -72,7 +72,7 @@ public class SlideshowEditorActivity extends ListActivity {
         doneButton.setOnClickListener(playButtonListener);
 
         // Get ListView and set it's adapter for displaying list of images.
-        slideshowEditorAdapter = new SlideshowEditorAdapter(this, slideshow.getImageList());
+        slideshowEditorAdapter = new SlideshowEditorAdapter(this, slideshow.getMediaItemsList());
         getListView().setAdapter(slideshowEditorAdapter);
 	}
 
@@ -184,6 +184,41 @@ public class SlideshowEditorActivity extends ListActivity {
     };
 
     /**
+     * Called when the user touches the "Take Picture" button.
+     */
+    private OnClickListener takePictureButtonListener = new OnClickListener() {
+
+        /**
+         * Launch the image taking activity.
+         * @param view
+         */
+        @Override
+        public void onClick(View view) {
+
+            Intent takePicture = new Intent(SlideshowEditorActivity.this, PictureTakerActivity.class);
+            startActivityForResult(takePicture, TAKE_PICTURE_ID);
+        }
+    };
+
+    /**
+     * Called when the user touches the "Add Video" button.
+     */
+    private OnClickListener addVideoButtonListener = new OnClickListener() {
+
+        /**
+         * Launch the video choosing activity.
+         * @param view
+         */
+        @Override
+        public void onClick(View view) {
+
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("video/*");
+            startActivityForResult(Intent.createChooser(intent, getResources().getText(R.string.chooser_video)), VIDEO_ID);
+        }
+    };
+
+    /**
      * Called when the user touches the "Delete" button next to an ImageView.
      */
     private OnClickListener deleteButtonListener = new OnClickListener() {
@@ -273,7 +308,7 @@ public class SlideshowEditorActivity extends ListActivity {
 
             imageView = (ImageView) params[0];
 
-            return SlideshowActivity.getThumbnail((Uri) params[1], getContentResolver(), new BitmapFactory.Options());
+            return SlideshowActivity.getThumbnail(MediaItem.MediaType.IMAGE, (Uri)params[1], getContentResolver(), new BitmapFactory.Options());
         }
 
         /**
