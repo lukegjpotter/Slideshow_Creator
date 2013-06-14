@@ -308,7 +308,7 @@ public class SlideshowEditorActivity extends ListActivity {
 
             imageView = (ImageView) params[0];
 
-            return SlideshowActivity.getThumbnail(MediaItem.MediaType.IMAGE, (Uri)params[1], getContentResolver(), new BitmapFactory.Options());
+            return SlideshowActivity.getThumbnail((MediaItem.MediaType) params[1], (Uri) params[2], getContentResolver(), new BitmapFactory.Options());
         }
 
         /**
