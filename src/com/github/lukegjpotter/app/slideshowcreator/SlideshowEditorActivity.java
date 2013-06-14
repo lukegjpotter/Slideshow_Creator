@@ -38,8 +38,10 @@ public class SlideshowEditorActivity extends ListActivity {
     private SlideshowInfo slideshow; // Contains Slideshow Data.
 
     // Set IDs for each type of media result.
-    private static final int PICTURE_ID = 1;
-    private static final int MUSIC_ID = 2;
+    private static final int PICTURE_ID      = 1;
+    private static final int MUSIC_ID        = 2;
+    private static final int VIDEO_ID        = 3;
+    private static final int TAKE_PICTURE_ID = 4;
 
     /**
      * The onCreate method.
@@ -89,10 +91,13 @@ public class SlideshowEditorActivity extends ListActivity {
             Uri selectedUri = data.getData();
 
             // If the Activity returns an image.
-            if (requestCode == PICTURE_ID) {
+            if (requestCode == PICTURE_ID || requestCode == TAKE_PICTURE_ID || requestCode == VIDEO_ID) {
 
-                // Add new image path to the slideshow.
-                slideshow.addImage(selectedUri.toString());
+                // Determines media type.
+                MediaItem.MediaType type = (requestCode == VIDEO_ID ? MediaItem.MediaType.VIDEO : MediaItem.MediaType.IMAGE);
+
+                // Add new MediaItem to the slideshow.
+                slideshow.addMediaItem(type, selectedUri.toString());
 
                 // Refresh the ListView.
                 slideshowEditorAdapter.notifyDataSetChanged();
