@@ -2,7 +2,7 @@ package com.github.lukegjpotter.app.slideshowcreator;
 
 /**
  * @author Luke GJ Potter - lukegjpotter
- * Date: 22/05/2013
+ * Date: 22/May/2013
  *
  * Version 1.0
  *

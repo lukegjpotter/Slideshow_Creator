@@ -4,9 +4,9 @@ package com.github.lukegjpotter.app.slideshowcreator;
  * SlideshowActivity.java
  *
  * @author Luke GJ Potter - lukegjpotter
- * Date: 07/Apr/2013
+ * Date: 14/Jun/2013
  *
- * @version 1.0
+ * @version 1.1
  *
  * Descrtiption:
  *     This is the main activity for the Slideshow.
