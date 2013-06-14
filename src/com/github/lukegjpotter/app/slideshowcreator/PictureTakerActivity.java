@@ -14,8 +14,11 @@ package com.github.lukegjpotter.app.slideshowcreator;
 import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnTouchListener;
 
 import java.util.List;
 
@@ -33,7 +36,67 @@ public class PictureTakerActivity extends Activity {
     private List <Camera.Size> sizes;                      // Supported preview sizes for Camera.
     private String effect = Camera.Parameters.EFFECT_NONE; // Default effect.
 
+    /**
+     * Called when the activity is first created.
+     *
+     * @param savedInstanceState
+     */
+    @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_picture_taker);
+
+        // Initialise the surfaceView and set its touch listener.
+        surfaceView = (SurfaceView) findViewById(R.id.cameraSurfaceView);
+        surfaceView.setOnTouchListener(touchListener);
+
+        // Initialise the surfaceHolder and set object to handles its callbacks.
+        surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(surfaceCallback);
     }
+
+    /**
+     * Handles SurfaceHolder.Callback events.
+     */
+    private SurfaceHolder.Callback surfaceCallback = new SurfaceHolder.Callback() {
+        @Override
+        public void surfaceCreated(SurfaceHolder surfaceHolder) {
+
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
+
+        }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
+        }
+    };
+
+    /**
+     * Handles Camera callbacks.
+     */
+    Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
+
+        @Override
+        public void onPictureTaken(byte[] bytes, Camera camera) {
+
+        }
+    };
+
+    /**
+     * Takes picture when the user touches the screen.
+     */
+    private OnTouchListener touchListener = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+
+            // Take a picture.
+            camera.takePicture(null, null, pictureCallback);
+            return false;
+        }
+    };
 }
