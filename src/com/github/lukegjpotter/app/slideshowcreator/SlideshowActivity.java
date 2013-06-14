@@ -146,6 +146,7 @@ public class SlideshowActivity extends ListActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
 		super.onActivityResult(requestCode, resultCode, data);
+        new SaveSlideshowTask().execute((Object[]) null); // Save slideshows.
 		slideshowAdapter.notifyDataSetChanged(); // Refresh the Adapter.
 	}
 
@@ -434,12 +435,20 @@ public class SlideshowActivity extends ListActivity {
 	/**
 	 * Utility method to get a thumbnail image bitmap.
 	 */
-	public static Bitmap getThumbnail(Uri uri, ContentResolver cr, BitmapFactory.Options options) {
-		
+	public static Bitmap getThumbnail(MediaItem.MediaType type, Uri uri, ContentResolver cr, BitmapFactory.Options options) {
+
+        Bitmap bitmap = null;
 		int id = Integer.parseInt(uri.getLastPathSegment());
-		
-		Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MICRO_KIND, options);
-		
+
+        // If it is an image.
+        if (type == MediaItem.MediaType.IMAGE) {
+
+		    bitmap = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MICRO_KIND, options);
+        } else if (type == MediaItem.MediaType.VIDEO){
+
+            bitmap = MediaStore.Video.Thumbnails.getThumbnail(cr, id, MediaStore.Video.Thumbnails.MICRO_KIND, options);
+        }
+
 		return bitmap;
 	}
 }
