@@ -4,7 +4,7 @@ package com.github.lukegjpotter.app.slideshowcreator;
  * @author Luke GJ Potter - lukegjpotter
  * Date: 22/May/2013
  *
- * Version 1.0
+ * @version 1.0
  *
  * Description:
  *     This is the activity for taking a picture
