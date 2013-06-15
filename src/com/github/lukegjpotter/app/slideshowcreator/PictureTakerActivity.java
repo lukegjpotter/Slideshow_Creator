@@ -14,9 +14,11 @@ package com.github.lukegjpotter.app.slideshowcreator;
 import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.view.View.OnTouchListener;
 
+import java.io.IOException;
 import java.util.List;
 
 public class PictureTakerActivity extends Activity {
@@ -92,19 +94,54 @@ public class PictureTakerActivity extends Activity {
      * Handles SurfaceHolder.Callback events.
      */
     private SurfaceHolder.Callback surfaceCallback = new SurfaceHolder.Callback() {
+
+        /**
+         * Initialise the camera when SurfaceView is created.
+         *
+         * @param surfaceHolder
+         */
         @Override
         public void surfaceCreated(SurfaceHolder surfaceHolder) {
 
+            camera = Camera.open(); // Defaults to back facing camera.
+            effects = camera.getParameters().getSupportedColorEffects();
+            sizes = camera.getParameters().getSupportedPreviewSizes();
         }
 
         @Override
-        public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
+        public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
 
+            if (isPreviewing) {       // If there's already a preview running.
+                camera.stopPreview(); // Stop the preview.
+            }
+
+            // Configure and set the camera parameters.
+            Camera.Parameters p = camera.getParameters();
+            p.setPreviewSize(sizes.get(0).width, sizes.get(0).height);
+            p.setColorEffect(effect); // Use the current selected effect.
+            camera.setParameters(p);  // Apply the new parameters.
+
+            try {
+                camera.setPreviewDisplay(surfaceHolder);
+            } catch (IOException e) {
+                Log.v(TAG, e.toString());
+            }
+
+            camera.stopPreview(); // Begin the preview.
+            isPreviewing = true;
         }
 
+        /**
+         * Release resources after the SurfaceView is destroyed.
+         *
+         * @param surfaceHolder
+         */
         @Override
         public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
 
+            camera.stopPreview(); // Stop the Camera preview.
+            isPreviewing = false;
+            camera.release();     // Release the Camera's Object resources.
         }
     };
 
