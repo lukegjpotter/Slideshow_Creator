@@ -14,10 +14,7 @@ package com.github.lukegjpotter.app.slideshowcreator;
 import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnTouchListener;
 
 import java.util.List;
@@ -54,6 +51,41 @@ public class PictureTakerActivity extends Activity {
         // Initialise the surfaceHolder and set object to handles its callbacks.
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(surfaceCallback);
+    }
+
+    /**
+     * Create the Activity's menu from list of supported colour effects.
+     *
+     * @param menu
+     * @return true
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        super.onCreateOptionsMenu(menu);
+
+        // Create menu items dor each supported effect.
+        for (String effect : effects) {
+            menu.add(effect);
+        }
+
+        return true;
+    }
+
+    /**
+     * Handle choice from options menu.
+     *
+     * @param item
+     * @return true
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Camera.Parameters p = camera.getParameters(); // Get Parameters.
+        p.setColorEffect(item.getTitle().toString()); // Set Colour Effect.
+        camera.setParameters(p);                      // Apply the new parameters.
+
+        return true;
     }
 
     /**
