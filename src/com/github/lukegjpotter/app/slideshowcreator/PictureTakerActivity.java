@@ -12,13 +12,20 @@ package com.github.lukegjpotter.app.slideshowcreator;
  */
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore.Images;
 import android.util.Log;
 import android.view.*;
 import android.view.View.OnTouchListener;
+import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public class PictureTakerActivity extends Activity {
@@ -150,9 +157,52 @@ public class PictureTakerActivity extends Activity {
      */
     Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
 
+        /**
+         * Handles Camera callbacks.
+         *
+         * @param imageData
+         * @param camera
+         */
         @Override
-        public void onPictureTaken(byte[] bytes, Camera camera) {
+        public void onPictureTaken(byte[] imageData, Camera camera) {
 
+            // Set the filename.
+            String filename = "Slideshow_" + System.currentTimeMillis();
+
+            // Create a ContentValues and configure new image's data.
+            ContentValues values = new ContentValues();
+            values.put(Images.Media.TITLE, filename);
+            values.put(Images.Media.DATE_ADDED, System.currentTimeMillis());
+            values.put(Images.Media.MIME_TYPE, "image/jpg");
+
+            // Get a URI for the location to save the file.
+            Uri uri = getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            try {
+                // Get an OutputStream to uri.
+                OutputStream outputStream = getContentResolver().openOutputStream(uri);
+                outputStream.write(imageData); // Output the Image.
+                outputStream.flush();          // Empty the buffer.
+                outputStream.close();          // Close the stream.
+
+                Intent returnIntent = new Intent();
+                returnIntent.setData(uri);          // Return Uri to SlideshowEditor.
+                setResult(RESULT_OK, returnIntent); // Took picture successfully.
+
+                // Display a message indicating that the image was saved.
+                Toast message = Toast.makeText(PictureTakerActivity.this, R.string.message_saved, Toast.LENGTH_SHORT);
+                message.setGravity(Gravity.CENTER, message.getXOffset() / 2, message.getYOffset() / 2);
+                message.show();
+
+                finish();
+            } catch (IOException ex) {
+
+                setResult(RESULT_CANCELED);
+
+                Toast message = Toast.makeText(PictureTakerActivity.this, R.string.message_error_saving, Toast.LENGTH_SHORT);
+                message.setGravity(Gravity.CENTER, message.getXOffset() / 2, message.getYOffset() / 2);
+                message.show();
+            }
         }
     };
 
