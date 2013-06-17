@@ -4,9 +4,9 @@ package com.github.lukegjpotter.app.slideshowcreator;
  * SlideshowPlayerActivity.java
  *
  * @author Luke GJ Potter - lukegjpotter
- * Date: 18/May/2013
+ * Date: 17/Jun/2013
  *
- * @version 1.0
+ * @version 1.1
  *
  * Description:
  *     This activity plays the selected slideshow
@@ -31,8 +31,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 public class SlideshowPlayerActivity extends Activity {
 
@@ -46,7 +49,8 @@ public class SlideshowPlayerActivity extends Activity {
 
     // Class level variables.
     private static final int DURATION = 5000; // Five seconds per slide.
-    private ImageView imageView;              // Displays the name of the current image.
+    private ImageView imageView;              // Displays the current image.
+    private VideoView videoView;              // Displays the current video.
     private String slideshowName;             // Name of the current slideshow.
     private SlideshowInfo slideshow;          // Slideshow being played.
     private BitmapFactory.Options options;    // Options for loading images.
@@ -56,7 +60,8 @@ public class SlideshowPlayerActivity extends Activity {
     private MediaPlayer mediaPlayer;          // Plays the background music, if any.
 
     /**
-     * Initializes the SlideshowPlayerActivity
+     * Initializes the SlideshowPlayerActivity.
+     *
      * @param savedInstanceState
      */
 	@Override
@@ -66,6 +71,20 @@ public class SlideshowPlayerActivity extends Activity {
 		setContentView(R.layout.activity_slideshow_player);
 
         imageView = (ImageView) findViewById(R.id.imageView);
+        videoView = (VideoView) findViewById(R.id.videoView);
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            /**
+             * Update the slideshow after the video has finished playing.
+             *
+             * @param mediaPlayer
+             */
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+
+                handler.post(updateSlideshow);
+            }
+        });
 
         if (savedInstanceState == null) {
 
@@ -110,7 +129,7 @@ public class SlideshowPlayerActivity extends Activity {
 	}
 
     /**
-     * Called after onCreate() and somethimes onStop().
+     * Called after onCreate() and sometimes onStop().
      */
     @Override
     protected void onStart() {
@@ -209,8 +228,18 @@ public class SlideshowPlayerActivity extends Activity {
                 finish();
             } else {
 
-                String item = slideshow.getImageAt(nextItemIndex);
-                new LoadImageTask().execute(Uri.parse(item));
+                MediaItem item = slideshow.getMediaItemAt(nextItemIndex);
+
+                if (item.getType() == MediaItem.MediaType.IMAGE) {
+                    imageView.setVisibility(View.VISIBLE);
+                    videoView.setVisibility(View.INVISIBLE);
+                    new LoadImageTask().execute(Uri.parse(item.getPath()));
+                } else {
+                    imageView.setVisibility(View.INVISIBLE);
+                    videoView.setVisibility(View.VISIBLE);
+                    playVideo(Uri.parse(item.getPath()));
+                }
+
                 ++nextItemIndex;
             }
         }
@@ -221,7 +250,7 @@ public class SlideshowPlayerActivity extends Activity {
         class LoadImageTask extends AsyncTask <Uri, Object, Bitmap> {
 
             /**
-             * Load Images
+             * Load Images.
              *
              * @param uris
              * @return bitmap
@@ -293,6 +322,19 @@ public class SlideshowPlayerActivity extends Activity {
                 }
 
                 return bitmap;
+            }
+
+            /**
+             * Play a video.
+             *
+             * @param videoUri
+             */
+            private void playVideo(Uri videoUri) {
+
+                // Configure the video view and play video.
+                videoView.setVideoURI(videoUri);
+                videoView.setMediaController(new MediaController(SlideshowPlayerActivity.this));
+                videoView.start();
             }
         }
     };
